@@ -409,6 +409,7 @@ func (decoder *EthTransactionDecoder) SubmitRawTransaction(wrapper openwallet.Wa
 
 	//交易成功，地址nonce+1并记录到缓存
 	decoder.wm.UpdateAddressNonce(wrapper, from, tx.Nonce()+1)
+	//decoder.wm.UpdateAddressNonce(wrapper, from, 0)
 
 	rawTx.TxID = txid
 	rawTx.IsSubmit = true
@@ -751,6 +752,8 @@ func (decoder *EthTransactionDecoder) CreateErc20TokenSummaryRawTransaction(wrap
 						supportAmount = fees
 					}
 				}
+
+				supportAmount = supportAmount.Truncate(decoder.wm.Decimal())
 
 				decoder.wm.Log.Debugf("create transaction for fees support account")
 				decoder.wm.Log.Debugf("fees account: %s", feesSupportAccount.AccountID)
